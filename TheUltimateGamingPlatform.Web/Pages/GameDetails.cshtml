@@ -1,0 +1,175 @@
+﻿@page
+@model TheUltimateGamingPlatform.Web.Pages.GameDetailsModel
+
+@if (Model.Game is not null)
+{
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-6">
+                <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+
+                        @* @if (Model.GameProduct.Videos.Count > 0)
+                        {
+                            <div class="carousel-item active">
+                                <video src="@Model.GameProduct.Videos[0].Url" class="d-block w-100" controls></video>
+                            </div>
+                        }
+                        else if (Model.GameProduct.Images.Count > 0)
+                        {
+                            <div class="carousel-item active">
+                                <img src="@Model.GameProduct.Images[0].Url" class="d-block w-100" alt="@Model.GameProduct.Title" />
+                            </div>
+                        }
+
+                        @if (Model.GameProduct.Videos.Count > 0 && Model.GameProduct.Images.Count > 0)
+                        {
+                            @for (int i = 1; i < Model.GameProduct.Videos.Count; i++)
+                            {
+                                <div class="carousel-item">
+                                    <video src="@Model.GameProduct.Videos[i].Url" class="d-block w-100" controls></video>
+                                </div>
+                            }
+                            @foreach (var image in Model.GameProduct.Images)
+                            {
+                                <div class="carousel-item">
+                                    <img src="@image.Url" class="d-block w-100" alt="@Model.GameProduct.Title" />
+                                </div>
+                            }
+                        }
+                        else if (Model.GameProduct.Videos.Count == 0 && Model.GameProduct.Images.Count > 0)
+                        {
+                            @for (int i = 1; i < Model.GameProduct.Images.Count; i++)
+                            {
+                                <div class="carousel-item">
+                                    <img src="@Model.GameProduct.Images[i].Url" class="d-block w-100" alt="@Model.GameProduct.Title" />
+                                </div>
+                            }
+                        }
+                        else if (Model.GameProduct.Videos.Count > 0 && Model.GameProduct.Images.Count == 0)
+                        {
+                            @for (int i = 1; i < Model.GameProduct.Videos.Count; i++)
+                            {
+                                <div class="carousel-item">
+                                    <video src="@Model.GameProduct.Videos[i].Url" class="d-block w-100" controls></video>
+                                </div>
+                            }
+                        }
+                        else *@
+                        {
+                            <div class="carousel-item active">
+                                <img src="/images/no_content.jpg" class="d-block w-100" alt="Нет контента" />
+                            </div>
+                        }
+
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel"
+                            data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#productCarousel"
+                            data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <h2 class="fw-bold">@Model.Game.Title</h2>
+                <h5>Жанры: </h5>
+                @* <ul>
+                    @foreach (var genres in Model.GameProduct.Genres)
+                    {
+                        <li>@genres.Title</li>
+                    }
+                </ul> *@
+                <h3 class="my-4">@Model.Game.Price ₽</h3>
+                <p class="mb-4">
+                    @Model.Game.Description
+                </p>
+                <div class="d-flex gap-3 mb-4">
+                    @* @if (!Model.ContainsGameProduct) *@
+                    {
+                        <a asp-controller="Game" asp-action="AddToCart" asp-route-id="@Model.Game.Id" class="btn btn-success">Добавить в корзину</a>
+                    }
+                   @*  else
+                    {
+                        <a class="btn btn-secondary">Игра уже куплена</a>
+                    } *@
+                </div>
+                @* @if (!Model.ContainsWishGameProduct) *@
+                {
+                    <div>
+                        <a asp-controller="Game" asp-action="AddWishList" asp-route-id="@Model.Game.Id" class="btn btn-primary" type="button">
+                            Добавить в список желаемого
+                        </a>
+                    </div>
+                }
+                @* else
+                {
+                    <div>
+                        <a asp-controller="Game" asp-action="DeleteWishList" asp-route-id="@Model.GameProduct.Id" class="btn btn-danger" type="button">
+                            Удалить из списка желаемого
+                        </a>
+                    </div>
+                } *@
+            </div>
+            <h5>Системные требования</h5>
+            @* <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Минимальные требования</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">ОС</th>
+                        <td>@Model.GameProduct.MinimumSystemRequirement.OS</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Процессор</th>
+                        <td>@Model.GameProduct.MinimumSystemRequirement.Processor</td>
+                    </tr>
+                    @if (Model.GameProduct.MinimumSystemRequirement.Network is not null)
+                    {
+                        <tr>
+                            <th scope="row">Сеть</th>
+                            <td>@Model.GameProduct.MinimumSystemRequirement.Network</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @if (Model.GameProduct.RecommendedSystemRequirement is not null)
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Рекомендованные требования</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">ОС</th>
+                            <td>@Model.GameProduct.RecommendedSystemRequirement.OS</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Процессор</th>
+                            <td>@Model.GameProduct.RecommendedSystemRequirement.Processor</td>
+                        </tr>
+                        @if (Model.GameProduct.RecommendedSystemRequirement.Network is not null)
+                        {
+                            <tr>
+                                <th scope="row">Сеть</th>
+                                <td>@Model.GameProduct.RecommendedSystemRequirement.Network</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            } *@
+        </div>
+    </div>
+}
+else
+{
+    <h1>Игры не была найдена</h1>
+}

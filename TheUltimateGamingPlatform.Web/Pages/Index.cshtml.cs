@@ -7,8 +7,8 @@ namespace TheUltimateGamingPlatform.Web.Pages;
 public class IndexModel(IRepositoryGame repositoryGame) : PageModel
 {
     public List<Game> Games { get; set; } = [];
-    public async Task OnGet()
+    public async Task OnGetAsync()
     {
-        Games = await repositoryGame.GetGamesAsync();
+        Games = await repositoryGame.GetAllAsync();
     }
 }
