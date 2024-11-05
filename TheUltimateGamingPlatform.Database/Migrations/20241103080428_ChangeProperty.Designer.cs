@@ -12,8 +12,8 @@ using TheUltimateGamingPlatform.Database;
 namespace TheUltimateGamingPlatform.Database.Migrations
 {
     [DbContext(typeof(TheUltimateGamingPlatformContext))]
-    [Migration("20241023144714_AddGameContent")]
-    partial class AddGameContent
+    [Migration("20241103080428_ChangeProperty")]
+    partial class ChangeProperty
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,6 +52,9 @@ namespace TheUltimateGamingPlatform.Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("MinimumSystemRequirementId")
+                        .HasColumnType("int");
+
                     b.Property<string>("PreviewImg")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -59,11 +62,18 @@ namespace TheUltimateGamingPlatform.Database.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int?>("RecommendedSystemRequirementId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MinimumSystemRequirementId");
+
+                    b.HasIndex("RecommendedSystemRequirementId");
 
                     b.ToTable("Games");
                 });
@@ -107,6 +117,47 @@ namespace TheUltimateGamingPlatform.Database.Migrations
                     b.ToTable("Genres");
                 });
 
+            modelBuilder.Entity("TheUltimateGamingPlatform.Model.SystemRequirement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Additionally")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DirectX")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HardDrive")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Memory")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Network")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OS")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Processor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VR")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SystemRequirements");
+                });
+
             modelBuilder.Entity("GameGenre", b =>
                 {
                     b.HasOne("TheUltimateGamingPlatform.Model.Game", null)
@@ -120,6 +171,23 @@ namespace TheUltimateGamingPlatform.Database.Migrations
                         .HasForeignKey("GenresId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("TheUltimateGamingPlatform.Model.Game", b =>
+                {
+                    b.HasOne("TheUltimateGamingPlatform.Model.SystemRequirement", "MinimumSystemRequirement")
+                        .WithMany()
+                        .HasForeignKey("MinimumSystemRequirementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TheUltimateGamingPlatform.Model.SystemRequirement", "RecommendedSystemRequirement")
+                        .WithMany()
+                        .HasForeignKey("RecommendedSystemRequirementId");
+
+                    b.Navigation("MinimumSystemRequirement");
+
+                    b.Navigation("RecommendedSystemRequirement");
                 });
 
             modelBuilder.Entity("TheUltimateGamingPlatform.Model.GameContent", b =>

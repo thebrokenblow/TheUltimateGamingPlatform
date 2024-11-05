@@ -8,4 +8,5 @@ public class TheUltimateGamingPlatformContext(DbContextOptions<TheUltimateGaming
     public DbSet<Game> Games { get; set; }
     public DbSet<Genre> Genres { get; set; }
     public DbSet<GameContent> GameContents { get; set; }
+    public DbSet<SystemRequirement> SystemRequirements { get; set; }
 }

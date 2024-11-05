@@ -2,9 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using TheUltimateGamingPlatform.Database;
 using TheUltimateGamingPlatform.Database.Repository;
 using TheUltimateGamingPlatform.Database.Repository.Interfaces;
+using TheUltimateGamingPlatform.Web.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
+
+builder.Services.AddSingleton<CartGameRepository>();
 builder.Services.AddTransient<IRepositoryGame, RepositoryGame>();
 
 string connection = builder.Configuration.GetConnectionString("TheUltimateGamingPlatformConnection");

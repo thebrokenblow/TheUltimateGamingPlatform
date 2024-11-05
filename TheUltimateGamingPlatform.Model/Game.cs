@@ -9,4 +9,6 @@ public class Game
     public required string PreviewImg { set; get; }
     public required List<Genre> Genres { get; set; }
     public required List<GameContent> GameContents { get; set; }
+    public required SystemRequirement MinimumSystemRequirement { get; set; }
+    public required SystemRequirement? RecommendedSystemRequirement { get; set; }
 }

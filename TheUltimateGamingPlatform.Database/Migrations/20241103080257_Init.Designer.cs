@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheUltimateGamingPlatform.Database;
 
@@ -11,9 +12,11 @@ using TheUltimateGamingPlatform.Database;
 namespace TheUltimateGamingPlatform.Database.Migrations
 {
     [DbContext(typeof(TheUltimateGamingPlatformContext))]
-    partial class TheUltimateGamingPlatformContextModelSnapshot : ModelSnapshot
+    [Migration("20241103080257_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,7 +52,7 @@ namespace TheUltimateGamingPlatform.Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MinimumSystemRequirementId")
+                    b.Property<int?>("MinimumSystemRequirementId")
                         .HasColumnType("int");
 
                     b.Property<string>("PreviewImg")
@@ -147,13 +150,7 @@ namespace TheUltimateGamingPlatform.Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SoundCard")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("VR")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("VideoCard")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -180,9 +177,7 @@ namespace TheUltimateGamingPlatform.Database.Migrations
                 {
                     b.HasOne("TheUltimateGamingPlatform.Model.SystemRequirement", "MinimumSystemRequirement")
                         .WithMany()
-                        .HasForeignKey("MinimumSystemRequirementId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MinimumSystemRequirementId");
 
                     b.HasOne("TheUltimateGamingPlatform.Model.SystemRequirement", "RecommendedSystemRequirement")
                         .WithMany()
