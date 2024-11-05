@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheUltimateGamingPlatform.Database;
 
@@ -11,9 +12,11 @@ using TheUltimateGamingPlatform.Database;
 namespace TheUltimateGamingPlatform.Database.Migrations
 {
     [DbContext(typeof(TheUltimateGamingPlatformContext))]
-    partial class TheUltimateGamingPlatformContextModelSnapshot : ModelSnapshot
+    [Migration("20241105160119_Change")]
+    partial class Change
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,21 +53,6 @@ namespace TheUltimateGamingPlatform.Database.Migrations
                     b.HasIndex("GenresId");
 
                     b.ToTable("GameGenre");
-                });
-
-            modelBuilder.Entity("GameUser", b =>
-                {
-                    b.Property<int>("GamesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("GamesId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("GameUser");
                 });
 
             modelBuilder.Entity("TheUltimateGamingPlatform.Model.Cart", b =>
@@ -258,21 +246,6 @@ namespace TheUltimateGamingPlatform.Database.Migrations
                     b.HasOne("TheUltimateGamingPlatform.Model.Genre", null)
                         .WithMany()
                         .HasForeignKey("GenresId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("GameUser", b =>
-                {
-                    b.HasOne("TheUltimateGamingPlatform.Model.Game", null)
-                        .WithMany()
-                        .HasForeignKey("GamesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TheUltimateGamingPlatform.Model.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

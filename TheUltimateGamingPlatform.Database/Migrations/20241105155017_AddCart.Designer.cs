@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheUltimateGamingPlatform.Database;
 
@@ -11,9 +12,11 @@ using TheUltimateGamingPlatform.Database;
 namespace TheUltimateGamingPlatform.Database.Migrations
 {
     [DbContext(typeof(TheUltimateGamingPlatformContext))]
-    partial class TheUltimateGamingPlatformContextModelSnapshot : ModelSnapshot
+    [Migration("20241105155017_AddCart")]
+    partial class AddCart
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,19 +25,19 @@ namespace TheUltimateGamingPlatform.Database.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CartGame", b =>
+            modelBuilder.Entity("CartUser", b =>
                 {
                     b.Property<int>("CartsId")
                         .HasColumnType("int");
 
-                    b.Property<int>("GamesId")
+                    b.Property<int>("UsersId")
                         .HasColumnType("int");
 
-                    b.HasKey("CartsId", "GamesId");
+                    b.HasKey("CartsId", "UsersId");
 
-                    b.HasIndex("GamesId");
+                    b.HasIndex("UsersId");
 
-                    b.ToTable("CartGame");
+                    b.ToTable("CartUser");
                 });
 
             modelBuilder.Entity("GameGenre", b =>
@@ -52,21 +55,6 @@ namespace TheUltimateGamingPlatform.Database.Migrations
                     b.ToTable("GameGenre");
                 });
 
-            modelBuilder.Entity("GameUser", b =>
-                {
-                    b.Property<int>("GamesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("GamesId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("GameUser");
-                });
-
             modelBuilder.Entity("TheUltimateGamingPlatform.Model.Cart", b =>
                 {
                     b.Property<int>("Id")
@@ -81,12 +69,7 @@ namespace TheUltimateGamingPlatform.Database.Migrations
                     b.Property<decimal>("Sum")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Carts");
                 });
@@ -98,6 +81,9 @@ namespace TheUltimateGamingPlatform.Database.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CartId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -121,6 +107,8 @@ namespace TheUltimateGamingPlatform.Database.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CartId");
 
                     b.HasIndex("MinimumSystemRequirementId");
 
@@ -232,7 +220,7 @@ namespace TheUltimateGamingPlatform.Database.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("CartGame", b =>
+            modelBuilder.Entity("CartUser", b =>
                 {
                     b.HasOne("TheUltimateGamingPlatform.Model.Cart", null)
                         .WithMany()
@@ -240,9 +228,9 @@ namespace TheUltimateGamingPlatform.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TheUltimateGamingPlatform.Model.Game", null)
+                    b.HasOne("TheUltimateGamingPlatform.Model.User", null)
                         .WithMany()
-                        .HasForeignKey("GamesId")
+                        .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -262,34 +250,12 @@ namespace TheUltimateGamingPlatform.Database.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("GameUser", b =>
-                {
-                    b.HasOne("TheUltimateGamingPlatform.Model.Game", null)
-                        .WithMany()
-                        .HasForeignKey("GamesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TheUltimateGamingPlatform.Model.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("TheUltimateGamingPlatform.Model.Cart", b =>
-                {
-                    b.HasOne("TheUltimateGamingPlatform.Model.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("TheUltimateGamingPlatform.Model.Game", b =>
                 {
+                    b.HasOne("TheUltimateGamingPlatform.Model.Cart", null)
+                        .WithMany("Games")
+                        .HasForeignKey("CartId");
+
                     b.HasOne("TheUltimateGamingPlatform.Model.SystemRequirement", "MinimumSystemRequirement")
                         .WithMany()
                         .HasForeignKey("MinimumSystemRequirementId")
@@ -310,6 +276,11 @@ namespace TheUltimateGamingPlatform.Database.Migrations
                     b.HasOne("TheUltimateGamingPlatform.Model.Game", null)
                         .WithMany("GameContents")
                         .HasForeignKey("GameId");
+                });
+
+            modelBuilder.Entity("TheUltimateGamingPlatform.Model.Cart", b =>
+                {
+                    b.Navigation("Games");
                 });
 
             modelBuilder.Entity("TheUltimateGamingPlatform.Model.Game", b =>

@@ -9,4 +9,6 @@ public class TheUltimateGamingPlatformContext(DbContextOptions<TheUltimateGaming
     public DbSet<Genre> Genres { get; set; }
     public DbSet<GameContent> GameContents { get; set; }
     public DbSet<SystemRequirement> SystemRequirements { get; set; }
+    public DbSet<Cart> Carts { get; set; }
+    public DbSet<User> Users { get; set; }
 }

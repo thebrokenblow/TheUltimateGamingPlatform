@@ -51,7 +51,11 @@
                     @Model.Game.Description
                 </p>
                 <div class="d-flex gap-3 mb-4">
-                    @if (Model.IsContainsInCart)
+                    @if (Model.IsPurchased)
+                    {
+                        <button type="button" class="btn btn-outline-info">Товар уже куплен</button>
+                    }
+                    else if (Model.IsContainsInCart)
                     {
                         <button type="button" class="btn btn-outline-danger">Товар уже добавлен в корзину</button>
                     }
@@ -64,9 +68,11 @@
                     }
                 </div>
                 <div>
-                    <a asp-controller="Game" asp-action="AddWishList" asp-route-id="@Model.Game.Id" class="btn btn-primary" type="button">
-                        Добавить в список желаемого
-                    </a>
+                    <form method="post" asp-page-handler="AddWishList">
+                        <input type="hidden" name="id" value="@Model.Game.Id" />
+                        <input class="btn btn-primary" type="submit" value="Добавить в список желаемого" />
+                    </form>
+                   
                 </div>
             </div>
 
