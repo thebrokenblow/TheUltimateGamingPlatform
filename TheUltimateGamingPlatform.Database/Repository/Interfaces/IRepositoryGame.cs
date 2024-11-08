@@ -4,8 +4,9 @@ namespace TheUltimateGamingPlatform.Database.Repository.Interfaces;
 
 public interface IRepositoryGame
 {
-    public Task<List<Game>> GetAllAsync();
-    public Task<Game> GetDetailsAsync(int id);
-    public Task<Game> GetByIdAsync(int id);
-
+    Task<List<Game>> GetAllAsync();
+    Task<Game> GetDetailsAsync(int id);
+    Task<Game> GetByIdAsync(int id);
+    Task<List<Game>> GetGamesByUserId(int id);
+    Task<List<Game>> GetGamesByListId(List<int> listId);
 }

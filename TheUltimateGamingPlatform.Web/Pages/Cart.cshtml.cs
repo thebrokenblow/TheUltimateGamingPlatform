@@ -1,8 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using TheUltimateGamingPlatform.Database;
 using TheUltimateGamingPlatform.Database.Repository.Interfaces;
 using TheUltimateGamingPlatform.Model;
 using TheUltimateGamingPlatform.Web.Repositories;
@@ -10,9 +7,10 @@ using TheUltimateGamingPlatform.Web.Repositories;
 namespace TheUltimateGamingPlatform.Web.Pages;
 
 public class CartModel(
+    IRepositoryCart repositoryCart,
+    IRepositoryUser repositoryUser,
     IRepositoryGame repositoryGame, 
-    CartGameRepository cartGameRepository, 
-    TheUltimateGamingPlatformContext theUltimateGamingPlatformContext) : PageModel
+    CartGameRepository cartGameRepository) : PageModel
 {
     public List<Game>? Games { get; set; }
     public decimal SumProduct { get; set; }
@@ -20,7 +18,7 @@ public class CartModel(
     private User? user;
     public async Task OnGetAsync()
     {
-        user = await theUltimateGamingPlatformContext.Users.SingleAsync(user => user.Id == 1);
+        user = await repositoryUser.GetByIdAsync(1);
         Games = cartGameRepository.Games;
         SumProduct = cartGameRepository.Games.Sum(game => game.Price);
     }
@@ -33,22 +31,19 @@ public class CartModel(
 
     public async Task<IActionResult> OnPostCreateOrder()
     {
-        var games = await theUltimateGamingPlatformContext.Games
-            .Where(game => cartGameRepository.Games
-                    .Select(game => game.Id)
-                    .Contains(game.Id))
-            .ToListAsync();
+        var user = await repositoryUser.GetByIdAsync(1);
+        var listId = cartGameRepository.Games.Select(x => x.Id).ToList();
+        var games = await repositoryGame.GetGamesByListId(listId);
         
         var cart = new Cart
         {
             DatePurchase = DateOnly.FromDateTime(DateTime.Now),
             Sum = cartGameRepository.Games.Sum(game => game.Price),
-            User = await theUltimateGamingPlatformContext.Users.SingleAsync(user => user.Id == 1),
+            User = user,
             Games = games
         };
 
-        await theUltimateGamingPlatformContext.Carts.AddAsync(cart);
-        await theUltimateGamingPlatformContext.SaveChangesAsync();
+        await repositoryCart.AddAsync(cart);
 
         cartGameRepository.Games.Clear();
         

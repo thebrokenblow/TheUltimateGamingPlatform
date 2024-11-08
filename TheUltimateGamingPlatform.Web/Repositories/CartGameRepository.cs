@@ -4,5 +4,5 @@ namespace TheUltimateGamingPlatform.Web.Repositories;
 
 public class CartGameRepository
 {
-    public List<Game> Games { get; set; } = new();
+    public List<Game> Games { get; set; } = [];
 }

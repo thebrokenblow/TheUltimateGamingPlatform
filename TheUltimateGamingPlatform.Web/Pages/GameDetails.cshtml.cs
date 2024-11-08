@@ -2,14 +2,12 @@ using TheUltimateGamingPlatform.Model;
 using TheUltimateGamingPlatform.Database.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TheUltimateGamingPlatform.Web.Repositories;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using TheUltimateGamingPlatform.Database;
-using Microsoft.EntityFrameworkCore;
 
 namespace TheUltimateGamingPlatform.Web.Pages;
 
-public class GameDetailsModel(IRepositoryGame repositoryGame, CartGameRepository cartGameRepository, TheUltimateGamingPlatformContext context) : PageModel
+public class GameDetailsModel(IRepositoryGame repositoryGame, IRepositoryUser repositoryUser, CartGameRepository cartGameRepository, TheUltimateGamingPlatformContext context) : PageModel
 {
     public Game? Game { get; set; }
     public bool IsContainsInCart { get; set; }
@@ -21,14 +19,7 @@ public class GameDetailsModel(IRepositoryGame repositoryGame, CartGameRepository
             .Where(x => x.Id == id)
             .Any();
 
-        IsPurchased = await context.Carts
-            .Include(x => x.User)
-            .Include(x => x.Games)
-            .Where(cart => cart.Games
-                            .Select(x => x.Id)
-                            .Contains(id))
-            .Where(cart => cart.User.Id == 1)
-            .AnyAsync();
+        IsPurchased = await repositoryUser.IsPurchasedGameAsync(id, 1);
 
         Game = await repositoryGame.GetDetailsAsync(id);
     }
@@ -43,13 +34,7 @@ public class GameDetailsModel(IRepositoryGame repositoryGame, CartGameRepository
 
     public async Task<IActionResult> OnPostAddWishList(int id)
     {
-        var game = await context.Games.Include(game => game.Users).SingleAsync(game => game.Id == id);
-        var user = await context.Users.Include(user => user.Games).SingleAsync(user => user.Id == 1);
-
-        game.Users.Add(user);
-        user.Games.Add(game);
-
-        await context.SaveChangesAsync();
+        await repositoryUser.AddGameWishListAsync(id, 1);
 
         return RedirectToPage("/Shop/WishList");
     }
