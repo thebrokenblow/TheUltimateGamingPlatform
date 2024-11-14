@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using TheUltimateGamingPlatform.Web.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using TheUltimateGamingPlatform.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace TheUltimateGamingPlatform.Web.Pages;
 
@@ -12,12 +13,18 @@ public class GameDetailsModel(IRepositoryGame repositoryGame, IRepositoryUser re
     public Game? Game { get; set; }
     public bool IsContainsInCart { get; set; }
     public bool IsPurchased { get; set; }
-
+    public bool IsWishList { get; set; }
     public async Task OnGetAsync(int id)
     {
         IsContainsInCart = cartGameRepository.Games
             .Where(x => x.Id == id)
             .Any();
+
+        var user = await context.Users
+            .Include(x => x.Games)
+            .SingleAsync(x => x.Id == 1);
+
+        IsWishList = user.Games.Where(x => x.Id == id).Any();
 
         IsPurchased = await repositoryUser.IsPurchasedGameAsync(id, 1);
 

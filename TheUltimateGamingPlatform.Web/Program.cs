@@ -8,6 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 
 builder.Services.AddSingleton<CartGameRepository>();
+builder.Services.AddTransient<IRepositoryCart, RepositoryCart>();
+
+builder.Services.AddTransient<IRepositoryUser, RepositoryUser>();
 builder.Services.AddTransient<IRepositoryGame, RepositoryGame>();
 
 string connection = builder.Configuration.GetConnectionString("TheUltimateGamingPlatformConnection");

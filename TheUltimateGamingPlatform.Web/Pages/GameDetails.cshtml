@@ -8,23 +8,17 @@
             <div class="col-lg-6">
                 <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner">
-                        @if (Model.Game.GameContents is not null)
+                        <div class="carousel-item active">
+                            <img src="@Model.Game.PreviewImg" class="d-block w-100" alt="@Model.Game.Title" />
+                        </div>
+                        @if (Model.Game.GameContents is not null && Model.Game.GameContents.Count != 0)
                         {
-                            <div class="carousel-item active">
-                                <img src="@Model.Game.GameContents.First().UrlContent" class="d-block w-100" alt="@Model.Game.Title" />
-                            </div>
-                            @for (int i = 1; i < Model.Game.GameContents.Count; i++)
+                            @for (int i = 0; i < Model.Game.GameContents.Count; i++)
                             {
                                 <div class="carousel-item">
                                     <img src="@Model.Game.GameContents[i].UrlContent" class="d-block w-100" controls />
                                 </div>
                             }
-                        }
-                        else
-                        {
-                            <div class="carousel-item active">
-                                <img src="/images/no_content.jpg" class="d-block w-100" alt="Нет контента" />
-                            </div>
                         }
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel"
@@ -68,11 +62,21 @@
                     }
                 </div>
                 <div>
-                    <form method="post" asp-page-handler="AddWishList">
-                        <input type="hidden" name="id" value="@Model.Game.Id" />
-                        <input class="btn btn-primary" type="submit" value="Добавить в список желаемого" />
-                    </form>
-                   
+                    @if (!Model.IsPurchased)
+                    {
+                        @if (Model.IsWishList)
+                        {
+                            <button type="button" class="btn btn-outline-danger">Игра уже есть в списке желаемого</button>
+                        }
+                        else
+                        {
+                            <form method="post" asp-page-handler="AddWishList">
+                                <input type="hidden" name="id" value="@Model.Game.Id" />
+                                <input class="btn btn-primary" type="submit" value="Добавить в список желаемого" />
+                            </form>
+                        }
+                    }
+
                 </div>
             </div>
 
